@@ -3,7 +3,8 @@ require 'httparty'
 module OmdbWrapper
   class Movie
     include HTTParty
-    base_uri OmdbWrapper::OMDB_URL
+
+    base_uri 'http://www.omdbapi.com'
 
     attr_reader :title,
                 :year,
@@ -27,12 +28,14 @@ module OmdbWrapper
       @writer = attributes['Writer']
       @plot = attributes['Plot']
       @imdb_rating = attributes['imdbRating']
+    end
 
-      @options = { query: { r: json, plot: 'full' } }
+    def self.options
+      @options = { query: { r: 'json', plot: 'full' } }
     end
 
     def self.find_by_name(name)
-      @options[:query][:t] = name
+      options[:query][:t] = name
 
       response = get('/?', @options)
       new response
